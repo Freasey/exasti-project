@@ -1,36 +1,178 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoCycle — Ride Green, Live Clean
 
-## Getting Started
+Pelacak bersepeda real-time untuk kota, dibuat sebagai aplikasi web (bukan
+aplikasi mobile) memakai Next.js. Rider merekam perjalanan lewat GPS browser,
+aplikasi menghitung jarak, kecepatan, elevasi, dan karbon yang dihemat, lalu
+mengubahnya jadi poin yang bisa ditukar dengan voucher partner.
 
-First, run the development server:
+**Akun demo:** `demo@ecocycle.id` / `demo1234` — atau langsung klik tombol
+**Coba Akun Demo** di halaman login.
+
+---
+
+## Fitur
+
+| Halaman | Isi |
+| --- | --- |
+| `/` | Landing page publik |
+| `/login`, `/register` | Autentikasi + tombol akun demo satu klik |
+| `/dashboard` | Sambutan, total poin & level, grafik CO₂, leaderboard, reward, aktivitas terakhir |
+| `/ride` | **Live tracking**: peta mengikuti posisi, jarak/durasi/kecepatan/elevasi berjalan, jeda-lanjut, simpan atau buang |
+| `/activities` | Riwayat ride dengan pratinjau rute + paginasi |
+| `/activities/[id]` | Detail ride: peta rute, statistik lengkap, dampak lingkungan, grafik elevasi/kecepatan, kudos, ubah judul |
+| `/live` | Peta semua rider yang sedang gowes saat ini (auto-refresh) |
+| `/analytics` | KPI, jarak per minggu, pola hari & jam, heatmap rute, rekor |
+| `/rewards` | Katalog voucher, penukaran poin, kode voucher, riwayat |
+| `/leaderboard` | Peringkat mingguan / bulanan / sepanjang masa |
+| `/settings` | Profil, unggah foto (Vercel Blob), badge pencapaian |
+
+Tambahan:
+
+- **Mode simulasi GPS** di halaman `/ride` — supaya demo bisa dijalankan dari
+  desktop tanpa perangkat GPS betulan.
+- **Sesi tahan refresh** — track disimpan ke `localStorage`, jadi ride tidak
+  hilang kalau tab tertutup atau halaman dimuat ulang.
+- **Wake Lock** — layar tidak mati saat merekam (di browser yang mendukung).
+
+## Stack
+
+- **Next.js 16** (App Router, TypeScript, Turbopack)
+- **Tailwind CSS v4** — token warna EcoCycle didefinisikan di `src/app/globals.css`
+- **Neon Postgres** via `@neondatabase/serverless` (HTTP driver, cocok untuk serverless)
+- **Vercel Blob** — arsip track GPS mentah + foto profil
+- **Leaflet + react-leaflet** dengan basemap gelap CARTO (tanpa API key)
+- **Recharts** untuk grafik, **lucide-react** untuk ikon
+- **jose** (JWT httpOnly cookie) + **bcryptjs** untuk autentikasi
+
+## Menjalankan secara lokal
+
+```bash
+npm install
+```
+
+Salin `.env.example` jadi `.env.local` lalu isi:
+
+```
+DATABASE_URL=postgresql://...neon.tech/neondb?sslmode=require
+AUTH_SECRET=string-acak-panjang
+BLOB_READ_WRITE_TOKEN=        # opsional saat development
+```
+
+Siapkan database (membuat tabel, katalog reward, badge, akun demo, dan
+rider pesaing beserta riwayat ride-nya):
+
+```bash
+npm run db:setup
+```
+
+Jalankan aplikasi:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka http://localhost:3000 lalu klik **Coba Akun Demo**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Perintah lain
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run db:reset
+```
 
-## Learn More
+Menghapus semua tabel lalu membangun ulang dari nol — berguna kalau ingin data
+demo yang segar.
 
-To learn more about Next.js, take a look at the following resources:
+## Struktur
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/
+    (auth)/         login & register (layout split-screen)
+    (app)/          area privat: dashboard, ride, activities, analytics, ...
+    api/            route handler: auth, rides, live, rewards, profile
+    actions/        server action (logout)
+  components/
+    map/            komponen Leaflet (dimuat dinamis tanpa SSR)
+    charts/         grafik Recharts
+    ui/             primitive: Button, Card, Field, Avatar, Progress
+  lib/
+    db.ts           koneksi Neon
+    schema.sql      skema database
+    metrics.ts      matematika domain: jarak, elevasi, CO₂, poin, level
+    rides.ts        mulai / ping / selesaikan ride
+    queries.ts      seluruh query baca untuk halaman
+    blob.ts         Vercel Blob (track & avatar)
+    seed.ts         data demo
+  proxy.ts          penjaga rute privat di edge
+scripts/
+  setup-db.ts       runner migrasi + seed
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cara angka dihitung
 
-## Deploy on Vercel
+Semua rumus ada di `src/lib/metrics.ts`, dan **statistik final selalu dihitung
+ulang di server** dari track GPS mentah — angka yang dikirim browser hanya untuk
+tampilan, jadi poin tidak bisa dipalsukan dari sisi klien.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Besaran | Rumus |
+| --- | --- |
+| Jarak | Haversine antar titik, lompatan > 40 m/s dibuang sebagai noise |
+| Moving time | Hanya sampel dengan kecepatan ≥ 0,8 m/s |
+| Elevasi | Altitude dihaluskan (moving average 5), kenaikan dihitung dengan histeresis 3 m |
+| CO₂ dihemat | `0,192 kg × km` (rata-rata emisi mobil bensin) |
+| Setara pohon | `CO₂ ÷ 14,25 kg` (serapan satu pohon per tahun) |
+| BBM dihemat | `CO₂ ÷ 2,44 kg` (emisi 1 liter bensin) |
+| Poin | `10/km + 1/menit gowes`, bonus 50 di ≥ 10 km dan 100 di ≥ 25 km |
+| Level | XP untuk naik level = `250 × level` |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Peran Vercel Blob
+
+Track GPS penuh bisa berisi ribuan titik. Supaya tabel Postgres tetap ramping:
+
+- **Vercel Blob** menyimpan track penuh (`tracks/{rideId}.json`) dan foto profil
+  (`avatars/{userId}-{timestamp}.{ext}`).
+- **Postgres** menyimpan `polyline` (≤ 300 titik hasil Ramer–Douglas–Peucker)
+  untuk peta, dan `profile` (≈ 120 sampel elevasi/kecepatan) untuk grafik.
+
+Store yang dipakai bersifat **private** (`access: "private"`), jadi blob tidak
+punya URL publik:
+
+- `track_url` di tabel `rides` menyimpan **pathname**, bukan URL. Isinya hanya
+  dibaca di server lewat `fetchTrack()` — jejak lokasi mentah tidak pernah
+  diekspos ke browser.
+- Foto profil disajikan lewat route proxy `GET /api/blob/avatars/...` yang
+  mengalirkan berkas dari Blob setelah memastikan pengunjung sudah masuk. Hanya
+  folder `avatars/` yang boleh dibaca lewat route ini; permintaan ke `tracks/`
+  dijawab 404.
+
+Kalau kamu memakai store **public**, ubah konstanta `ACCESS` di
+`src/lib/blob.ts` menjadi `"public"` — `putAvatar` bisa mengembalikan
+`blob.url` langsung dan route proxy tidak lagi diperlukan.
+
+Kalau `BLOB_READ_WRITE_TOKEN` belum diisi, aplikasi tetap berjalan normal —
+hanya arsip track penuh dan unggah foto profil yang dinonaktifkan.
+
+## Deploy ke Vercel
+
+1. Push repositori ini ke GitHub, lalu **Import Project** di Vercel.
+2. Di **Storage**, hubungkan **Neon** (atau pakai `DATABASE_URL` yang sudah ada)
+   dan buat **Blob store** — Vercel akan mengisi `BLOB_READ_WRITE_TOKEN`
+   otomatis ke project.
+3. Tambahkan environment variable:
+   - `DATABASE_URL`
+   - `AUTH_SECRET` (buat baru untuk produksi, mis. `openssl rand -base64 32`)
+4. Jalankan `npm run db:setup` sekali dari lokal dengan `DATABASE_URL` produksi
+   agar tabel dan data demo tersedia.
+5. Deploy.
+
+> **Catatan GPS:** Geolocation API hanya aktif di `https://` (atau `localhost`).
+> Setelah deploy ke Vercel, live tracking langsung bisa dipakai dari HP lewat
+> browser tanpa instalasi apa pun.
+
+## Batasan yang diketahui
+
+- Akun demo dipakai bersama semua orang yang menekan tombol demo, jadi
+  perubahan profil di akun itu terlihat oleh pengunjung lain.
+- Belum ada fitur follow/teman; feed dan leaderboard bersifat global.
+- Ride yang sudah selesai bisa diubah judul dan catatannya, tapi belum bisa
+  dihapus (poin yang sudah masuk perlu dikembalikan lebih dulu).

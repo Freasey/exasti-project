@@ -1,26 +1,155 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------ *
+ * EcoCycle design tokens
+ * Dark-first: hitam kehijauan + aksen lime, tombol aksi oranye.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-ink-950: #060806;
+  --color-ink-900: #0a0d0a; /* background halaman */
+  --color-ink-880: #0d110c; /* sidebar */
+  --color-ink-850: #10150f; /* card */
+  --color-ink-800: #151b14; /* card hover / inner */
+  --color-ink-700: #1e261c; /* border */
+  --color-ink-600: #2b352a; /* border kuat */
+
+  --color-lime-50: #f2fde9;
+  --color-lime-200: #cdf5a6;
+  --color-lime-300: #a9ec72;
+  --color-lime-400: #8be04e; /* aksen utama */
+  --color-lime-500: #6fcb3a;
+  --color-lime-600: #56a52c;
+  --color-lime-900: #1b3410;
+
+  --color-flame-400: #ff7a45;
+  --color-flame-500: #f4562a; /* tombol Start Cycling */
+  --color-flame-600: #d93f16;
+
+  --color-mist-100: #e9efe7; /* teks utama */
+  --color-mist-300: #b9c4b6;
+  --color-mist-500: #8a948a; /* teks sekunder */
+  --color-mist-600: #616b60;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    color-scheme: dark;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-ink-900);
+    color: var(--color-mist-100);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-lime-400);
+    color: #04120b;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-600) transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility card {
+  background-color: var(--color-ink-850);
+  border: 1px solid var(--color-ink-700);
+  border-radius: 1rem;
+}
+
+/* Latar radial hijau lembut untuk halaman publik & banner */
+@utility eco-glow {
+  background-image:
+    radial-gradient(
+      60rem 30rem at 15% -10%,
+      color-mix(in oklab, var(--color-lime-400) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45rem 25rem at 95% 0%,
+      color-mix(in oklab, var(--color-lime-600) 12%, transparent),
+      transparent 65%
+    );
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ---------------- Leaflet: samakan dengan tema gelap ---------------- */
+.leaflet-container {
+  background: #0d110c;
+  font-family: var(--font-sans);
+  outline: none;
+}
+.leaflet-tile-pane {
+  /* Basemap CARTO dark sudah gelap, cukup diturunkan sedikit kontrasnya. */
+  filter: brightness(0.92) saturate(0.85);
+}
+.leaflet-control-zoom a {
+  background: #10150f !important;
+  color: #e9efe7 !important;
+  border-color: #1e261c !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #1e261c !important;
+}
+.leaflet-control-attribution {
+  background: rgba(10, 13, 10, 0.8) !important;
+  color: #616b60 !important;
+}
+.leaflet-control-attribution a {
+  color: #8a948a !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #10150f;
+  color: #e9efe7;
+  border: 1px solid #1e261c;
+}
+
+/* Marker rider yang berdenyut di peta live */
+@keyframes eco-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(139, 224, 78, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(139, 224, 78, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 224, 78, 0);
+  }
+}
+.rider-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-lime-400);
+  border: 2px solid #0a0d0a;
+  animation: eco-pulse 2s infinite;
+}
+
+/* Marker start / finish */
+.route-pin {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  border: 2px solid #0a0d0a;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.route-pin--start {
+  background: var(--color-lime-400);
+}
+.route-pin--end {
+  background: var(--color-flame-500);
 }
