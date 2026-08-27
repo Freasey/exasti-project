@@ -1,5 +1,6 @@
 import "server-only";
 import { sql, rows, one } from "./db";
+import type { BBox, BikeLane } from "./bike-lanes";
 import type {
   Achievement,
   Redemption,
@@ -451,5 +452,38 @@ export async function getAchievements(userId: string): Promise<Achievement[]> {
       left join user_achievements ua
         on ua.code = a.code and ua.user_id = ${userId}
       order by a.sort_order asc`
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Green Route — jalur ramah sepeda (OpenStreetMap, ODbL)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Jalur sepeda yang bersinggungan dengan viewport peta.
+ *
+ * Dua bbox bersinggungan bila saling tumpang tindih di kedua sumbu — itulah
+ * bentuk perbandingan di bawah, dan alasan indeks `bike_lanes_bbox_idx`
+ * mencakup keempat kolom sekaligus. Saat hasil melebihi `limit`, jalur yang
+ * paling terlindung didahulukan supaya yang terpotong adalah yang paling
+ * tidak informatif.
+ */
+export async function getBikeLanes(
+  box: BBox,
+  limit = 1_200
+): Promise<BikeLane[]> {
+  return rows<BikeLane>(
+    await sql`
+      select osm_id, name, kind, surface, geom
+      from bike_lanes
+      where min_lat <= ${box.north} and max_lat >= ${box.south}
+        and min_lng <= ${box.east}  and max_lng >= ${box.west}
+      order by case kind
+                 when 'protected' then 0
+                 when 'lane'      then 1
+                 else 2
+               end,
+               osm_id
+      limit ${limit}`
   );
 }

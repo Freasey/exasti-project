@@ -94,3 +94,21 @@ create table if not exists user_achievements (
   unlocked_at timestamptz not null default now(),
   primary key (user_id, code)
 );
+
+-- Green Route: jalur ramah sepeda dari OpenStreetMap (ODbL).
+-- Diisi oleh `npm run bike-lanes:sync`, bukan oleh seed.
+create table if not exists bike_lanes (
+  osm_id     bigint primary key,
+  name       text,
+  kind       text not null,                              -- protected | lane | shared
+  surface    text,
+  geom       jsonb not null,                             -- [[lat,lng], ...]
+  min_lat    double precision not null,
+  min_lng    double precision not null,
+  max_lat    double precision not null,
+  max_lng    double precision not null,
+  updated_at timestamptz not null default now()
+);
+-- Filter viewport selalu membandingkan keempat sisi bbox sekaligus.
+create index if not exists bike_lanes_bbox_idx
+  on bike_lanes (min_lat, max_lat, min_lng, max_lng);

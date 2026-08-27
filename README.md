@@ -16,7 +16,7 @@ mengubahnya jadi poin yang bisa ditukar dengan voucher partner.
 | --- | --- |
 | `/` | Landing page publik |
 | `/login`, `/register` | Autentikasi + tombol akun demo satu klik |
-| `/dashboard` | Sambutan, total poin & level, grafik CO₂, leaderboard, reward, aktivitas terakhir |
+| `/dashboard` | Sambutan, total poin & level, **streak gowes**, grafik CO₂, leaderboard, reward, aktivitas terakhir |
 | `/ride` | **Live tracking**: peta mengikuti posisi, jarak/durasi/kecepatan/elevasi berjalan, jeda-lanjut, simpan atau buang |
 | `/activities` | Riwayat ride dengan pratinjau rute + paginasi |
 | `/activities/[id]` | Detail ride: peta rute, statistik lengkap, dampak lingkungan, grafik elevasi/kecepatan, kudos, ubah judul |
@@ -28,6 +28,8 @@ mengubahnya jadi poin yang bisa ditukar dengan voucher partner.
 
 Tambahan:
 
+- **Streak gowes** — hari aktif dihitung dari ride yang selesai, lengkap
+  dengan deretan tujuh hari terakhir dan badge 3 / 7 / 30 hari.
 - **Mode simulasi GPS** di halaman `/ride` — supaya demo bisa dijalankan dari
   desktop tanpa perangkat GPS betulan.
 - **Sesi tahan refresh** — track disimpan ke `localStorage`, jadi ride tidak
@@ -56,6 +58,7 @@ Salin `.env.example` jadi `.env.local` lalu isi:
 DATABASE_URL=postgresql://...neon.tech/neondb?sslmode=require
 AUTH_SECRET=string-acak-panjang
 BLOB_READ_WRITE_TOKEN=        # opsional saat development
+ORS_API_KEY=                  # opsional, untuk perencana rute Green Route
 ```
 
 Siapkan database (membuat tabel, katalog reward, badge, akun demo, dan
@@ -82,6 +85,17 @@ npm run db:reset
 Menghapus semua tabel lalu membangun ulang dari nol — berguna kalau ingin data
 demo yang segar.
 
+```bash
+npm run bike-lanes:sync
+```
+
+Menarik jalur ramah sepeda Jabodetabek dari OpenStreetMap ke tabel `bike_lanes`
+(dipakai fitur **Green Route**). Idempoten dan aman diulang — kalau ada petak
+yang gagal karena server Overpass sedang penuh, jalankan lagi untuk melengkapi.
+Pakai `-- --bbox=south,west,north,east` untuk kota lain.
+
+Data OSM berlisensi ODbL, jadi atribusi di peta wajib tetap tampil.
+
 ## Struktur
 
 ```
@@ -99,6 +113,7 @@ src/
     db.ts           koneksi Neon
     schema.sql      skema database
     metrics.ts      matematika domain: jarak, elevasi, CO₂, poin, level
+    streak.ts       aturan streak + query hari aktif (fungsi hitungnya murni)
     rides.ts        mulai / ping / selesaikan ride
     queries.ts      seluruh query baca untuk halaman
     blob.ts         Vercel Blob (track & avatar)
@@ -124,6 +139,7 @@ tampilan, jadi poin tidak bisa dipalsukan dari sisi klien.
 | BBM dihemat | `CO₂ ÷ 2,44 kg` (emisi 1 liter bensin) |
 | Poin | `10/km + 1/menit gowes`, bonus 50 di ≥ 10 km dan 100 di ≥ 25 km |
 | Level | XP untuk naik level = `250 × level` |
+| Streak | Hari aktif = total jarak hari itu ≥ 1 km, dikelompokkan menurut `Asia/Jakarta`. Boleh libur 1 hari, tapi jatah itu hanya berlaku sekali per 7 hari |
 
 ## Peran Vercel Blob
 

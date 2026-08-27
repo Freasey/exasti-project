@@ -3,6 +3,7 @@
 import { Fragment, useMemo } from "react";
 import { Polyline } from "react-leaflet";
 import { FitBounds, L, MapShell } from "./MapShell";
+import { GreenRouteLayer } from "./GreenRouteLayer";
 
 /**
  * "Heatmap" rute: semua polyline digambar tipis dan transparan, sehingga
@@ -23,6 +24,7 @@ export default function HeatMap({
   return (
     <MapShell zoom={12} interactive className={className}>
       <FitBounds bounds={bounds} padding={40} />
+      <GreenRouteLayer planner={false} />
       {routes.map((route, i) =>
         route.length > 1 ? (
           <Fragment key={i}>

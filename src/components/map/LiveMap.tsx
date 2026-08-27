@@ -2,6 +2,7 @@
 
 import { Marker, Polyline } from "react-leaflet";
 import { DEFAULT_CENTER, FollowPoint, MapShell, markerIcon } from "./MapShell";
+import { GreenRouteLayer } from "./GreenRouteLayer";
 
 export type LiveMapProps = {
   path: [number, number][];
@@ -25,6 +26,7 @@ export default function LiveMap({
       className={className}
     >
       <FollowPoint point={current} enabled={follow} />
+      <GreenRouteLayer />
 
       {path.length > 1 && (
         <>

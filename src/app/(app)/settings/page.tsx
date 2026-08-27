@@ -3,6 +3,7 @@ import {
   Award,
   Bike,
   Flag,
+  Flame,
   Info,
   Leaf,
   Lock,
@@ -38,6 +39,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   leaf: Leaf,
   trees: Trees,
   "trending-up": TrendingUp,
+  flame: Flame,
 };
 
 export default async function SettingsPage() {

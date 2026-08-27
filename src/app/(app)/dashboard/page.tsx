@@ -17,6 +17,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { buttonClass } from "@/components/ui/Button";
 import { CyclistScene } from "@/components/CyclistScene";
 import { RewardTile } from "@/components/RewardTile";
+import { StreakCard } from "@/components/StreakCard";
 import { ImpactChart, RangeSelect } from "@/components/charts/ImpactChart";
 import { RideRow } from "@/components/RideRow";
 import { requireUser } from "@/lib/auth";
@@ -35,6 +36,7 @@ import {
   levelFromXp,
   treesFromCo2,
 } from "@/lib/metrics";
+import { getStreak } from "@/lib/streak";
 import { formatKm, formatNumber, greeting } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -53,16 +55,25 @@ export default async function DashboardPage({
   const user = await requireUser();
   const { thisMonth, lastMonth } = monthBounds();
 
-  const [series, leaderboard, rewards, recentRides, current, previous, activeRide] =
-    await Promise.all([
-      getImpactSeries(user.id, range),
-      getLeaderboard("all", 5),
-      getRewards(),
-      getRecentRides(user.id, 4),
-      getUserTotals(user.id, thisMonth),
-      getUserTotals(user.id, lastMonth, thisMonth),
-      getActiveRide(user.id),
-    ]);
+  const [
+    series,
+    leaderboard,
+    rewards,
+    recentRides,
+    current,
+    previous,
+    activeRide,
+    streak,
+  ] = await Promise.all([
+    getImpactSeries(user.id, range),
+    getLeaderboard("all", 5),
+    getRewards(),
+    getRecentRides(user.id, 4),
+    getUserTotals(user.id, thisMonth),
+    getUserTotals(user.id, lastMonth, thisMonth),
+    getActiveRide(user.id),
+    getStreak(user.id),
+  ]);
 
   const level = levelFromXp(user.lifetime_points);
   const rangeCo2 = series.length > 0 ? series[series.length - 1].co2 : 0;
@@ -138,6 +149,9 @@ export default async function DashboardPage({
           </p>
         </div>
       </section>
+
+      {/* ---------------- Streak ---------------- */}
+      <StreakCard streak={streak} />
 
       {/* ---------------- Dampak + leaderboard ---------------- */}
       <div className="grid gap-5 xl:grid-cols-[1.75fr_1fr]">

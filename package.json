@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:setup": "tsx scripts/setup-db.ts",
-    "db:reset": "tsx scripts/setup-db.ts --reset"
+    "db:reset": "tsx scripts/setup-db.ts --reset",
+    "bike-lanes:sync": "tsx scripts/sync-bike-lanes.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -1,4 +1,5 @@
 import { sql, rows } from "./db";
+import { getStreak } from "./streak";
 
 export type AchievementDef = {
   code: string;
@@ -10,7 +11,8 @@ export type AchievementDef = {
     | "distance_total"
     | "co2_total"
     | "ride_distance"
-    | "elev_total";
+    | "elev_total"
+    | "streak";
   threshold: number;
 };
 
@@ -39,6 +41,30 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     icon: "bike",
     metric: "ride_count",
     threshold: 50,
+  },
+  {
+    code: "streak_3",
+    name: "Tiga Hari Beruntun",
+    description: "Streak 3 hari",
+    icon: "flame",
+    metric: "streak",
+    threshold: 3,
+  },
+  {
+    code: "streak_7",
+    name: "Seminggu Penuh",
+    description: "Streak 7 hari",
+    icon: "flame",
+    metric: "streak",
+    threshold: 7,
+  },
+  {
+    code: "streak_30",
+    name: "Sebulan Tanpa Putus",
+    description: "Streak 30 hari",
+    icon: "flame",
+    metric: "streak",
+    threshold: 30,
   },
   {
     code: "dist_50k",
@@ -136,14 +162,32 @@ export async function evaluateAchievements(
     ).map((r) => r.code)
   );
 
+  // Badge streak dinilai dari rekor terpanjang, bukan streak berjalan,
+  // supaya sekali terbuka tidak terasa "hilang" saat streaknya putus.
+  const needsStreak = ACHIEVEMENTS.some(
+    (def) => def.metric === "streak" && !owned.has(def.code)
+  );
+  const longestStreak = needsStreak ? (await getStreak(userId)).longest : 0;
+
   const unlocked: AchievementDef[] = [];
   for (const def of ACHIEVEMENTS) {
     if (owned.has(def.code)) continue;
-    const value = Number(stats?.[def.metric] ?? 0);
+    const value =
+      def.metric === "streak" ? longestStreak : Number(stats?.[def.metric] ?? 0);
     if (value >= def.threshold) unlocked.push(def);
   }
 
   for (const def of unlocked) {
+    // user_achievements punya foreign key ke achievements, jadi badge yang
+    // baru ditambahkan ke katalog dipastikan ada dulu — kalau tidak,
+    // menyelesaikan ride akan gagal di database yang belum di-seed ulang.
+    await sql`
+      insert into achievements (code, name, description, icon, metric, threshold, sort_order)
+      values (${def.code}, ${def.name}, ${def.description}, ${def.icon},
+              ${def.metric}, ${def.threshold},
+              ${ACHIEVEMENTS.findIndex((a) => a.code === def.code)})
+      on conflict (code) do nothing`;
+
     await sql`
       insert into user_achievements (user_id, code)
       values (${userId}, ${def.code})

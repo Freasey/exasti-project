@@ -3,6 +3,7 @@
 import { Fragment, useMemo } from "react";
 import { Marker, Polyline, Popup } from "react-leaflet";
 import { FitBounds, L, MapShell, markerIcon } from "./MapShell";
+import { GreenRouteLayer } from "./GreenRouteLayer";
 import { formatDistance, formatDurationShort } from "@/lib/format";
 
 export type RiderPin = {
@@ -33,6 +34,7 @@ export default function RidersMap({
   return (
     <MapShell zoom={11} interactive className={className}>
       <FitBounds bounds={bounds} padding={48} />
+      <GreenRouteLayer />
 
       {riders.map((rider) => (
         <Fragment key={rider.ride_id}>

@@ -26,12 +26,34 @@ export function Sidebar({ user }: { user: ShellUser }) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-[264px] shrink-0 flex-col border-r border-ink-700 bg-ink-880 lg:flex">
-      <div className="px-6 py-6">
+    /**
+     * `self-start` + `sticky` + `h-screen`: tanpa self-start, flex item ini
+     * ikut diregangkan setinggi halaman sehingga sticky tidak punya ruang
+     * bergerak dan sidebar ikut ter-scroll bersama konten.
+     */
+    <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col self-start overflow-hidden border-r border-ink-700 bg-ink-880 lg:flex">
+      {/* siluet kota — dekorasi latar, diposisikan absolut supaya tidak
+          memakan ruang layout dan mendorong kartu profil ke bawah fold */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 opacity-70">
+        <svg
+          viewBox="0 0 264 160"
+          className="absolute inset-x-0 bottom-0 h-full w-full text-lime-900"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            fill="currentColor"
+            d="M0 120h16V80h10v40h14V96h18v24h12V60h14v60h16V88h20v32h14V72h12v48h18V92h16v28h12V64h14v56h18V100h14v20h22v40H0z"
+          />
+          <circle cx="46" cy="66" r="16" fill="none" stroke="currentColor" strokeWidth="3" />
+        </svg>
+      </div>
+
+      <div className="relative px-6 py-6">
         <Logo href="/dashboard" />
       </div>
 
-      <nav className="flex flex-col gap-1 px-3">
+      <nav className="relative flex min-h-0 flex-col gap-1 overflow-y-auto px-3 pb-4">
         {NAV_ITEMS.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -39,7 +61,7 @@ export function Sidebar({ user }: { user: ShellUser }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] transition-colors ${
+              className={`relative flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-[15px] transition-colors ${
                 active
                   ? "bg-lime-400/10 font-medium text-lime-300"
                   : "text-mist-300 hover:bg-ink-800 hover:text-mist-100"
@@ -55,23 +77,7 @@ export function Sidebar({ user }: { user: ShellUser }) {
         })}
       </nav>
 
-      {/* siluet kota — dekorasi latar sidebar */}
-      <div className="pointer-events-none relative -mb-2 mt-auto h-40 opacity-70">
-        <svg
-          viewBox="0 0 264 160"
-          className="absolute inset-x-0 bottom-0 h-full w-full text-lime-900"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path
-            fill="currentColor"
-            d="M0 120h16V80h10v40h14V96h18v24h12V60h14v60h16V88h20v32h14V72h12v48h18V92h16v28h12V64h14v56h18V100h14v20h22v40H0z"
-          />
-          <circle cx="46" cy="66" r="16" fill="none" stroke="currentColor" strokeWidth="3" />
-        </svg>
-      </div>
-
-      <div className="m-3 rounded-2xl border border-ink-700 bg-ink-850 p-4">
+      <div className="relative m-3 mt-auto rounded-2xl border border-ink-700 bg-ink-850 p-4">
         <div className="flex items-center gap-3">
           <Avatar name={user.name} src={user.avatarUrl} size={48} ring />
           <div className="min-w-0 flex-1">

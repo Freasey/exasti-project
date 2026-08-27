@@ -90,66 +90,69 @@ export default async function RideDetailPage({
         />
       </header>
 
-      {/* ---------------- Peta ---------------- */}
-      <Card className="h-[340px] overflow-hidden sm:h-[420px]">
-        <RouteMap polyline={ride.polyline} interactive />
-      </Card>
+      {/* ---------------- Peta + statistik ----------------
+          Mobile: peta menumpuk di atas statistik.
+          Desktop lebar: peta di kiri, statistik jadi kolom di sampingnya. */}
+      <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
+        <Card className="h-[340px] overflow-hidden sm:h-[420px] xl:h-auto xl:min-h-[460px]">
+          <RouteMap polyline={ride.polyline} interactive />
+        </Card>
 
-      {/* ---------------- Statistik ---------------- */}
-      <Card className="grid grid-cols-2 gap-5 p-5 sm:grid-cols-4">
-        <Stat
-          icon={<Route className="h-4 w-4" />}
-          label="Jarak"
-          value={formatKm(ride.distance_m, 2)}
-          unit="km"
-          big
-        />
-        <Stat
-          icon={<Timer className="h-4 w-4" />}
-          label="Waktu gowes"
-          value={formatDuration(ride.moving_s)}
-          big
-        />
-        <Stat
-          icon={<Gauge className="h-4 w-4" />}
-          label="Kecepatan rata-rata"
-          value={Number(ride.avg_speed).toFixed(1)}
-          unit="km/j"
-          big
-        />
-        <Stat
-          icon={<Leaf className="h-4 w-4" />}
-          label="CO₂ dihemat"
-          value={co2.toFixed(2)}
-          unit="kg"
-          big
-          accent
-        />
+        <Card className="grid grid-cols-2 content-start gap-5 p-5 sm:grid-cols-4 xl:grid-cols-2">
+          <Stat
+            icon={<Route className="h-4 w-4" />}
+            label="Jarak"
+            value={formatKm(ride.distance_m, 2)}
+            unit="km"
+            big
+          />
+          <Stat
+            icon={<Timer className="h-4 w-4" />}
+            label="Waktu gowes"
+            value={formatDuration(ride.moving_s)}
+            big
+          />
+          <Stat
+            icon={<Gauge className="h-4 w-4" />}
+            label="Kecepatan rata-rata"
+            value={Number(ride.avg_speed).toFixed(1)}
+            unit="km/j"
+            big
+          />
+          <Stat
+            icon={<Leaf className="h-4 w-4" />}
+            label="CO₂ dihemat"
+            value={co2.toFixed(2)}
+            unit="kg"
+            big
+            accent
+          />
 
-        <Stat
-          icon={<Zap className="h-4 w-4" />}
-          label="Kecepatan maks"
-          value={Number(ride.max_speed).toFixed(1)}
-          unit="km/j"
-        />
-        <Stat
-          icon={<Mountain className="h-4 w-4" />}
-          label="Elevasi"
-          value={formatNumber(ride.elev_gain)}
-          unit="m"
-        />
-        <Stat
-          icon={<Flame className="h-4 w-4" />}
-          label="Kalori"
-          value={formatNumber(ride.calories)}
-          unit="kkal"
-        />
-        <Stat
-          icon={<Clock className="h-4 w-4" />}
-          label="Total durasi"
-          value={formatDuration(ride.duration_s)}
-        />
-      </Card>
+          <Stat
+            icon={<Zap className="h-4 w-4" />}
+            label="Kecepatan maks"
+            value={Number(ride.max_speed).toFixed(1)}
+            unit="km/j"
+          />
+          <Stat
+            icon={<Mountain className="h-4 w-4" />}
+            label="Elevasi"
+            value={formatNumber(ride.elev_gain)}
+            unit="m"
+          />
+          <Stat
+            icon={<Flame className="h-4 w-4" />}
+            label="Kalori"
+            value={formatNumber(ride.calories)}
+            unit="kkal"
+          />
+          <Stat
+            icon={<Clock className="h-4 w-4" />}
+            label="Total durasi"
+            value={formatDuration(ride.duration_s)}
+          />
+        </Card>
+      </div>
 
       {/* ---------------- Dampak ---------------- */}
       <Card>

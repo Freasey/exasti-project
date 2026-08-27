@@ -3,34 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Play } from "lucide-react";
-import { NAV_ITEMS } from "./nav-items";
+import { MOBILE_NAV_ITEMS, type NavItem } from "./nav-items";
 import { NavIcon } from "./NavIcon";
 
-const LEFT = NAV_ITEMS.slice(0, 2);
-const RIGHT = NAV_ITEMS.slice(3, 5);
+// Tombol gowes duduk di tengah, jadi item dibagi rata kiri-kanan.
+const HALF = Math.ceil(MOBILE_NAV_ITEMS.length / 2);
+const LEFT = MOBILE_NAV_ITEMS.slice(0, HALF);
+const RIGHT = MOBILE_NAV_ITEMS.slice(HALF);
 
 export function MobileNav() {
   const pathname = usePathname();
 
-  const item = (href: string, label: string, icon: (typeof NAV_ITEMS)[number]["icon"]) => {
-    const active = pathname === href || pathname.startsWith(`${href}/`);
+  const item = (nav: NavItem) => {
+    const active = pathname === nav.href || pathname.startsWith(`${nav.href}/`);
     return (
       <Link
-        key={href}
-        href={href as never}
+        key={nav.href}
+        href={nav.href}
         className={`flex flex-1 flex-col items-center gap-1 py-2 text-[10px] transition-colors ${
           active ? "text-lime-400" : "text-mist-500"
         }`}
       >
-        <NavIcon name={icon} className="h-5 w-5" />
-        {label}
+        <NavIcon name={nav.icon} className="h-5 w-5" />
+        {nav.short ?? nav.label}
       </Link>
     );
   };
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end border-t border-ink-700 bg-ink-880/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
-      {LEFT.map((i) => item(i.href, i.label, i.icon))}
+      {LEFT.map(item)}
 
       <div className="relative flex w-20 justify-center">
         <Link
@@ -42,7 +44,7 @@ export function MobileNav() {
         </Link>
       </div>
 
-      {RIGHT.map((i) => item(i.href, i.label, i.icon))}
+      {RIGHT.map(item)}
     </nav>
   );
 }

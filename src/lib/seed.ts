@@ -136,6 +136,53 @@ async function generateHistory(
   }
 }
 
+/**
+ * Ride harian berturut-turut sampai hari ini, supaya fitur streak langsung
+ * kelihatan di akun demo (riwayat acak di atas jarang menghasilkan hari
+ * yang benar-benar berurutan).
+ */
+export async function generateStreakRides(
+  user: { id: string; username: string },
+  opts: { days: number; city: keyof typeof CITY_SPOTS; baseKm: number; speed: number }
+): Promise<void> {
+  const seedBase = [...user.username].reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rand = makeRandom(seedBase + 7919);
+  const spots = CITY_SPOTS[opts.city] ?? CITY_SPOTS.Jakarta;
+  const now = new Date();
+
+  const jobs: (() => Promise<unknown>)[] = [];
+
+  for (let daysAgo = opts.days - 1; daysAgo >= 0; daysAgo--) {
+    const startTime = new Date(now);
+    if (daysAgo === 0) {
+      // Ride hari ini dimundurkan 90 menit supaya tidak jatuh di masa depan.
+      startTime.setTime(now.getTime() - 90 * 60_000);
+    } else {
+      startTime.setDate(now.getDate() - daysAgo);
+      startTime.setHours(6, Math.floor(rand() * 50), 0, 0);
+    }
+
+    const spot = spots[Math.floor(rand() * spots.length)];
+    const track = generateTrack(seedBase + daysAgo * 613, {
+      start: [
+        spot[0] + (rand() - 0.5) * 0.01,
+        spot[1] + (rand() - 0.5) * 0.01,
+      ],
+      distanceKm: Math.max(3, opts.baseKm * (0.5 + rand() * 0.6)),
+      avgSpeedKmh: opts.speed * (0.9 + rand() * 0.2),
+      startTime,
+    });
+
+    const title = titleForHour(startTime.getHours(), rand);
+    jobs.push(() => insertCompletedRide(user.id, track, title));
+  }
+
+  const CHUNK = 8;
+  for (let i = 0; i < jobs.length; i += CHUNK) {
+    await Promise.all(jobs.slice(i, i + CHUNK).map((job) => job()));
+  }
+}
+
 /** Sinkronkan poin user dari total poin ride-nya. */
 async function syncPoints(userId: string, spentRatio = 0): Promise<void> {
   await sql`
@@ -192,6 +239,12 @@ export async function ensureDemoUser(): Promise<User> {
       baseKm: 16,
       speed: 24,
       days: 120,
+    });
+    await generateStreakRides(user, {
+      days: 6,
+      city: "Jakarta",
+      baseKm: 16,
+      speed: 24,
     });
     await syncPoints(user.id, 0.25);
     await evaluateAchievements(user.id);
