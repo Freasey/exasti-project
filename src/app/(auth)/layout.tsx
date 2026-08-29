@@ -30,7 +30,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
 
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
-      {/* Panel brand — desktop saja */}
+      {/* Panel brand - desktop saja */}
       <section className="eco-glow relative hidden overflow-hidden border-r border-ink-700 bg-ink-880 lg:flex lg:flex-col">
         <div className="relative z-10 px-12 pt-12">
           <Logo />

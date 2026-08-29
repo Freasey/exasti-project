@@ -5,13 +5,21 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L, { type LatLngBoundsExpression, type LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-/** Basemap gelap gratis dari CARTO (butuh atribusi OSM + CARTO). */
+/**
+ * Basemap gelap dari CARTO (butuh atribusi OSM + CARTO).
+ * CARTO kini mewajibkan API key gratis untuk basemap raster-nya - tanpa key,
+ * tile tetap jalan tapi ditandai watermark "API KEY REQUIRED". Daftar key
+ * gratis di https://carto.com/basemaps/apikey lalu isi
+ * NEXT_PUBLIC_CARTO_API_KEY di .env.local.
+ */
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
 const TILE_URL =
-  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" +
+  (CARTO_API_KEY ? `?key=${CARTO_API_KEY}` : "");
 const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
-/** Jakarta — fallback saat rider belum punya titik apa pun. */
+/** Jakarta - fallback saat rider belum punya titik apa pun. */
 export const DEFAULT_CENTER: LatLngExpression = [-6.2088, 106.8456];
 
 export function markerIcon(className: string, size = 14) {

@@ -1,5 +1,5 @@
 /**
- * Green Route — jalur mana yang ramah sepeda.
+ * Green Route - jalur mana yang ramah sepeda.
  *
  * Datanya dari OpenStreetMap (lisensi ODbL) lewat Overpass API, disinkronkan
  * ke Neon oleh `npm run bike-lanes:sync`. Modul ini sengaja bebas dependensi
@@ -23,9 +23,9 @@ export type BBox = {
 
 /**
  * Tiga tingkat keramahan, dari yang paling aman:
- * - `protected` — jalur terpisah dari lalu lintas motor
- * - `lane`      — marka khusus sepeda di badan jalan
- * - `shared`    — berbagi lajur, tapi sepeda diakui secara resmi
+ * - `protected` - jalur terpisah dari lalu lintas motor
+ * - `lane`      - marka khusus sepeda di badan jalan
+ * - `shared`    - berbagi lajur, tapi sepeda diakui secara resmi
  */
 export type BikeLaneKind = "protected" | "lane" | "shared";
 
@@ -38,8 +38,8 @@ export type BikeLane = {
 };
 
 /**
- * Satu warna teal untuk semua jalur — supaya tidak tertukar dengan jejak
- * rider yang lime — dan ketebalan garis yang menyiratkan tingkat proteksi.
+ * Satu warna teal untuk semua jalur - supaya tidak tertukar dengan jejak
+ * rider yang lime - dan ketebalan garis yang menyiratkan tingkat proteksi.
  */
 export const LANE_STYLE: Record<
   BikeLaneKind,
@@ -75,7 +75,7 @@ export const KIND_ORDER: BikeLaneKind[] = ["protected", "lane", "shared"];
 
 /**
  * Menerjemahkan tag OSM menjadi satu tingkat keramahan.
- * Mengembalikan null kalau ruas ini sebenarnya bukan jalur sepeda —
+ * Mengembalikan null kalau ruas ini sebenarnya bukan jalur sepeda -
  * Overpass ikut mengirim `cycleway=no`/`separate` karena filter regex.
  */
 export function classifyLane(tags: Record<string, string>): BikeLaneKind | null {
@@ -89,7 +89,7 @@ export function classifyLane(tags: Record<string, string>): BikeLaneKind | null 
   const has = (...values: string[]) =>
     cycleway.some((value) => values.includes(value));
 
-  // Sepeda dilarang — apa pun tag lainnya, ruas ini tidak masuk hitungan.
+  // Sepeda dilarang - apa pun tag lainnya, ruas ini tidak masuk hitungan.
   if (tags.bicycle === "no" || tags.bicycle === "dismount") return null;
 
   if (tags.highway === "cycleway") return "protected";

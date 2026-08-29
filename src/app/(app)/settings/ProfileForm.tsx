@@ -126,7 +126,7 @@ export function ProfileForm({
           <p className="font-medium">@{username}</p>
           <p className="text-sm text-mist-500">{email}</p>
           <p className="mt-1 text-xs text-mist-600">
-            JPG, PNG, WEBP, atau AVIF — maksimal 4 MB.
+            JPG, PNG, WEBP, atau AVIF - maksimal 4 MB.
           </p>
         </div>
       </div>

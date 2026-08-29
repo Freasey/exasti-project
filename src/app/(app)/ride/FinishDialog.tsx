@@ -19,7 +19,7 @@ export function FinishDialog({
   onConfirm: (title: string, note: string) => void | Promise<void>;
 }) {
   // Dialog di-mount ulang tiap kali dibuka, jadi judul cukup diambil
-  // sebagai nilai awal state — tanpa efek sinkronisasi.
+  // sebagai nilai awal state - tanpa efek sinkronisasi.
   const [title, setTitle] = useState(defaultTitle);
   const [note, setNote] = useState("");
 

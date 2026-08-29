@@ -12,7 +12,7 @@ export type User = {
   created_at: string;
 };
 
-/** Baris mentah tabel users — hanya dipakai di server saat autentikasi. */
+/** Baris mentah tabel users - hanya dipakai di server saat autentikasi. */
 export type UserRow = User & { password_hash: string };
 
 export type SessionUser = Pick<

@@ -8,7 +8,7 @@ import type { TrackPoint } from "./types";
  *
  * Store yang dipakai bersifat **private**, sehingga blob tidak bisa dibuka
  * lewat URL publik. Semua pembacaan lewat SDK dengan token (di server), dan
- * file yang perlu tampil di browser — foto profil — disajikan lewat route
+ * file yang perlu tampil di browser - foto profil - disajikan lewat route
  * proxy `/api/blob/...`.
  */
 
@@ -77,7 +77,7 @@ const EXT_BY_TYPE: Record<string, string> = {
 
 /**
  * Mengunggah avatar dan mengembalikan URL yang bisa langsung dipakai di
- * `<img src>` — yaitu route proxy aplikasi, bukan URL Blob (store privat).
+ * `<img src>` - yaitu route proxy aplikasi, bukan URL Blob (store privat).
  */
 export async function putAvatar(
   userId: string,

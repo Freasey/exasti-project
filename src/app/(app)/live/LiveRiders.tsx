@@ -24,7 +24,7 @@ export function LiveRiders({ initial }: { initial: LiveRider[] }) {
       setRiders(data.riders);
       setUpdatedAt(new Date());
     } catch {
-      // koneksi putus sesaat — coba lagi pada interval berikutnya
+      // koneksi putus sesaat - coba lagi pada interval berikutnya
     } finally {
       setRefreshing(false);
     }

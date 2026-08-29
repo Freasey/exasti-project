@@ -5,7 +5,7 @@ import { getLiveRiders } from "@/lib/queries";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Daftar rider yang sedang gowes — dipanggil berkala oleh peta live. */
+/** Daftar rider yang sedang gowes - dipanggil berkala oleh peta live. */
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {

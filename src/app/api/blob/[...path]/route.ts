@@ -5,7 +5,7 @@ import { blobEnabled, readBlob } from "@/lib/blob";
 export const runtime = "nodejs";
 
 /**
- * Menyajikan berkas dari Vercel Blob store yang bersifat privat — saat ini
+ * Menyajikan berkas dari Vercel Blob store yang bersifat privat - saat ini
  * hanya foto profil. Blob privat tidak punya URL publik, jadi isinya dialirkan
  * lewat route ini setelah pengunjung terbukti sudah masuk.
  */

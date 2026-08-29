@@ -102,7 +102,7 @@ export function LoginForm() {
       </Button>
 
       <p className="mt-3 text-center text-xs text-mist-600">
-        Masuk langsung dengan data contoh — {DEMO_EMAIL} / {DEMO_PASSWORD}
+        Masuk langsung dengan data contoh - {DEMO_EMAIL} / {DEMO_PASSWORD}
       </p>
     </>
   );

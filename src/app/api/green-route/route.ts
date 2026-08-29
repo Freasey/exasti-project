@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // ORS memakai urutan [lng, lat] — kebalikan dari Leaflet.
+  // ORS memakai urutan [lng, lat] - kebalikan dari Leaflet.
   const coordinates = [
     [body.from[1], body.from[0]],
     [body.to[1], body.to[0]],
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       response.status === 404
         ? "Tidak ketemu rute sepeda antara dua titik itu."
         : response.status === 403 || response.status === 401
-          ? "ORS menolak API key — cek ORS_API_KEY di .env.local."
+          ? "ORS menolak API key - cek ORS_API_KEY di .env.local."
           : "Layanan rute sedang bermasalah. Coba lagi sebentar.";
     return NextResponse.json({ error: message }, { status });
   }

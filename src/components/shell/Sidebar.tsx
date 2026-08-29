@@ -32,7 +32,7 @@ export function Sidebar({ user }: { user: ShellUser }) {
      * bergerak dan sidebar ikut ter-scroll bersama konten.
      */
     <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col self-start overflow-hidden border-r border-ink-700 bg-ink-880 lg:flex">
-      {/* siluet kota — dekorasi latar, diposisikan absolut supaya tidak
+      {/* siluet kota - dekorasi latar, diposisikan absolut supaya tidak
           memakan ruang layout dan mendorong kartu profil ke bawah fold */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 opacity-70">
         <svg

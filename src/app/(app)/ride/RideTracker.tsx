@@ -196,7 +196,7 @@ export function RideTracker({ activeRideId }: { activeRideId: string | null }) {
                       Mode simulasi
                     </span>
                     <span className="mt-0.5 block text-xs text-mist-500">
-                      Untuk mencoba dari desktop tanpa GPS — posisi dibuat
+                      Untuk mencoba dari desktop tanpa GPS - posisi dibuat
                       otomatis.
                     </span>
                   </span>

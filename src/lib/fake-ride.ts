@@ -102,7 +102,7 @@ export function generateTrack(
   return track;
 }
 
-/** Titik start populer di beberapa kota — dipakai seed & akun demo. */
+/** Titik start populer di beberapa kota - dipakai seed & akun demo. */
 export const CITY_SPOTS: Record<string, [number, number][]> = {
   Jakarta: [
     [-6.2088, 106.8456], // Bundaran HI

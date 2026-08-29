@@ -165,7 +165,7 @@ export default async function LeaderboardPage({
             <Card className="flex items-center gap-3 px-5 py-4">
               <Leaf className="h-4 w-4 shrink-0 text-lime-400" />
               <p className="text-sm text-mist-500">
-                Kamu belum masuk peringkat periode ini — satu ride saja sudah
+                Kamu belum masuk peringkat periode ini - satu ride saja sudah
                 cukup untuk mulai naik.
               </p>
             </Card>

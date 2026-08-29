@@ -1,11 +1,11 @@
-# EcoCycle — Ride Green, Live Clean
+# EcoCycle - Ride Green, Live Clean
 
 Pelacak bersepeda real-time untuk kota, dibuat sebagai aplikasi web (bukan
 aplikasi mobile) memakai Next.js. Rider merekam perjalanan lewat GPS browser,
 aplikasi menghitung jarak, kecepatan, elevasi, dan karbon yang dihemat, lalu
 mengubahnya jadi poin yang bisa ditukar dengan voucher partner.
 
-**Akun demo:** `demo@ecocycle.id` / `demo1234` — atau langsung klik tombol
+**Akun demo:** `demo@ecocycle.id` / `demo1234` - atau langsung klik tombol
 **Coba Akun Demo** di halaman login.
 
 ---
@@ -28,21 +28,22 @@ mengubahnya jadi poin yang bisa ditukar dengan voucher partner.
 
 Tambahan:
 
-- **Streak gowes** — hari aktif dihitung dari ride yang selesai, lengkap
+- **Streak gowes** - hari aktif dihitung dari ride yang selesai, lengkap
   dengan deretan tujuh hari terakhir dan badge 3 / 7 / 30 hari.
-- **Mode simulasi GPS** di halaman `/ride` — supaya demo bisa dijalankan dari
+- **Mode simulasi GPS** di halaman `/ride` - supaya demo bisa dijalankan dari
   desktop tanpa perangkat GPS betulan.
-- **Sesi tahan refresh** — track disimpan ke `localStorage`, jadi ride tidak
+- **Sesi tahan refresh** - track disimpan ke `localStorage`, jadi ride tidak
   hilang kalau tab tertutup atau halaman dimuat ulang.
-- **Wake Lock** — layar tidak mati saat merekam (di browser yang mendukung).
+- **Wake Lock** - layar tidak mati saat merekam (di browser yang mendukung).
 
 ## Stack
 
 - **Next.js 16** (App Router, TypeScript, Turbopack)
-- **Tailwind CSS v4** — token warna EcoCycle didefinisikan di `src/app/globals.css`
+- **Tailwind CSS v4** - token warna EcoCycle didefinisikan di `src/app/globals.css`
 - **Neon Postgres** via `@neondatabase/serverless` (HTTP driver, cocok untuk serverless)
-- **Vercel Blob** — arsip track GPS mentah + foto profil
-- **Leaflet + react-leaflet** dengan basemap gelap CARTO (tanpa API key)
+- **Vercel Blob** - arsip track GPS mentah + foto profil
+- **Leaflet + react-leaflet** dengan basemap gelap CARTO (butuh API key gratis
+  dari CARTO, lihat `NEXT_PUBLIC_CARTO_API_KEY` di `.env.example`)
 - **Recharts** untuk grafik, **lucide-react** untuk ikon
 - **jose** (JWT httpOnly cookie) + **bcryptjs** untuk autentikasi
 
@@ -82,7 +83,7 @@ Buka http://localhost:3000 lalu klik **Coba Akun Demo**.
 npm run db:reset
 ```
 
-Menghapus semua tabel lalu membangun ulang dari nol — berguna kalau ingin data
+Menghapus semua tabel lalu membangun ulang dari nol - berguna kalau ingin data
 demo yang segar.
 
 ```bash
@@ -90,7 +91,7 @@ npm run bike-lanes:sync
 ```
 
 Menarik jalur ramah sepeda Jabodetabek dari OpenStreetMap ke tabel `bike_lanes`
-(dipakai fitur **Green Route**). Idempoten dan aman diulang — kalau ada petak
+(dipakai fitur **Green Route**). Idempoten dan aman diulang - kalau ada petak
 yang gagal karena server Overpass sedang penuh, jalankan lagi untuk melengkapi.
 Pakai `-- --bbox=south,west,north,east` untuk kota lain.
 
@@ -126,7 +127,7 @@ scripts/
 ## Cara angka dihitung
 
 Semua rumus ada di `src/lib/metrics.ts`, dan **statistik final selalu dihitung
-ulang di server** dari track GPS mentah — angka yang dikirim browser hanya untuk
+ulang di server** dari track GPS mentah - angka yang dikirim browser hanya untuk
 tampilan, jadi poin tidak bisa dipalsukan dari sisi klien.
 
 | Besaran | Rumus |
@@ -154,7 +155,7 @@ Store yang dipakai bersifat **private** (`access: "private"`), jadi blob tidak
 punya URL publik:
 
 - `track_url` di tabel `rides` menyimpan **pathname**, bukan URL. Isinya hanya
-  dibaca di server lewat `fetchTrack()` — jejak lokasi mentah tidak pernah
+  dibaca di server lewat `fetchTrack()` - jejak lokasi mentah tidak pernah
   diekspos ke browser.
 - Foto profil disajikan lewat route proxy `GET /api/blob/avatars/...` yang
   mengalirkan berkas dari Blob setelah memastikan pengunjung sudah masuk. Hanya
@@ -162,17 +163,17 @@ punya URL publik:
   dijawab 404.
 
 Kalau kamu memakai store **public**, ubah konstanta `ACCESS` di
-`src/lib/blob.ts` menjadi `"public"` — `putAvatar` bisa mengembalikan
+`src/lib/blob.ts` menjadi `"public"` - `putAvatar` bisa mengembalikan
 `blob.url` langsung dan route proxy tidak lagi diperlukan.
 
-Kalau `BLOB_READ_WRITE_TOKEN` belum diisi, aplikasi tetap berjalan normal —
+Kalau `BLOB_READ_WRITE_TOKEN` belum diisi, aplikasi tetap berjalan normal -
 hanya arsip track penuh dan unggah foto profil yang dinonaktifkan.
 
 ## Deploy ke Vercel
 
 1. Push repositori ini ke GitHub, lalu **Import Project** di Vercel.
 2. Di **Storage**, hubungkan **Neon** (atau pakai `DATABASE_URL` yang sudah ada)
-   dan buat **Blob store** — Vercel akan mengisi `BLOB_READ_WRITE_TOKEN`
+   dan buat **Blob store** - Vercel akan mengisi `BLOB_READ_WRITE_TOKEN`
    otomatis ke project.
 3. Tambahkan environment variable:
    - `DATABASE_URL`

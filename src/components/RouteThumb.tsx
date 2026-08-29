@@ -1,5 +1,5 @@
 /**
- * Pratinjau rute sebagai SVG murni — jauh lebih ringan daripada memuat
+ * Pratinjau rute sebagai SVG murni - jauh lebih ringan daripada memuat
  * satu instance Leaflet per baris daftar aktivitas.
  */
 export function RouteThumb({

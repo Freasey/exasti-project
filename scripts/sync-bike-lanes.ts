@@ -5,7 +5,7 @@
  *   npm run bike-lanes:sync -- --bbox=-7.9,110.2,-7.6,110.6
  *
  * Idempoten: ruas yang sudah ada di-update, ruas yang hilang dari OSM
- * dibersihkan setelah sinkronisasi berhasil. Data OSM berlisensi ODbL —
+ * dibersihkan setelah sinkronisasi berhasil. Data OSM berlisensi ODbL -
  * atribusi wajib tetap tampil di peta.
  */
 import { config } from "dotenv";
@@ -32,7 +32,7 @@ const OVERPASS_MIRRORS = [
   "https://overpass.private.coffee/api/interpreter",
 ];
 
-/** Sisi petak maksimum (derajat) — petak kecil jauh lebih jarang timeout. */
+/** Sisi petak maksimum (derajat) - petak kecil jauh lebih jarang timeout. */
 const TILE_DEG = 0.25;
 
 /** Jeda antar permintaan supaya tidak dianggap membanjiri server publik. */
@@ -41,13 +41,13 @@ const TILE_DELAY_MS = 1_500;
 /** Berapa ronde satu petak dicoba sebelum sinkronisasi dibatalkan. */
 const TILE_ROUNDS = 4;
 
-/** Jeda antar ronde — cukup panjang agar slot Overpass sempat dilepas. */
+/** Jeda antar ronde - cukup panjang agar slot Overpass sempat dilepas. */
 const ROUND_BACKOFF_MS = [15_000, 35_000, 60_000];
 
 /**
  * Batas waktu yang kita deklarasikan ke Overpass. Sengaja pendek: query yang
  * telanjur nyangkut tetap memegang satu slot selama nilai ini, dan server
- * publik cuma memberi 2 slot per IP — nilai besar membuat run berikutnya
+ * publik cuma memberi 2 slot per IP - nilai besar membuat run berikutnya
  * langsung ditolak 504 oleh sisa run kita sendiri.
  */
 const QUERY_TIMEOUT_S = 60;
@@ -90,7 +90,7 @@ function overpassQuery(b: BBox): string {
 out geom;`;
 }
 
-/** Jarak haversine kasar — cukup untuk menyaring potongan pendek. */
+/** Jarak haversine kasar - cukup untuk menyaring potongan pendek. */
 function lengthMeters(points: [number, number][]): number {
   let total = 0;
   for (let i = 1; i < points.length; i++) {
@@ -168,7 +168,7 @@ function tiles(box: BBox): BBox[] {
 
 /**
  * Berapa kali tiap mirror gagal sepanjang sinkronisasi. Dipakai untuk
- * mengurutkan pilihan, bukan untuk mencoret permanen — 504 dari Overpass
+ * mengurutkan pilihan, bukan untuk mencoret permanen - 504 dari Overpass
  * hampir selalu sesaat, jadi mirror yang sempat gagal tetap layak dicoba
  * lagi belakangan daripada memaksa semua trafik ke host yang lebih rusak.
  */
@@ -182,7 +182,7 @@ function preferredMirrors(): string[] {
 
 /**
  * Overpass memberi 2 slot per IP dan langsung membalas 504 saat keduanya
- * terpakai — termasuk oleh query kita sendiri yang belum kedaluwarsa. Endpoint
+ * terpakai - termasuk oleh query kita sendiri yang belum kedaluwarsa. Endpoint
  * /api/status memberi tahu kapan slot berikutnya bebas, jadi kita menunggu
  * alih-alih menembaki server dengan percobaan yang pasti ditolak.
  */
@@ -207,7 +207,7 @@ async function waitForSlot(url: string): Promise<void> {
     process.stdout.write(`\r  menunggu slot Overpass ${wait}s...\n`);
     await sleep(wait * 1_000);
   } catch {
-    // Status opsional — kalau tidak terbaca, lanjut saja dan biarkan retry bekerja.
+    // Status opsional - kalau tidak terbaca, lanjut saja dan biarkan retry bekerja.
   }
 }
 
@@ -250,7 +250,7 @@ async function fetchTile(box: BBox, label: string): Promise<OverpassWay[]> {
       } catch (error) {
         lastError = (error as Error).message;
         failures.set(url, (failures.get(url) ?? 0) + 1);
-        process.stdout.write(`\r  ${label} ronde ${round + 1} — ${lastError}\n`);
+        process.stdout.write(`\r  ${label} ronde ${round + 1} - ${lastError}\n`);
       }
     }
 
@@ -371,11 +371,11 @@ async function main() {
       elements = await fetchTile(tile, label);
     } catch (error) {
       failed.push(index + 1);
-      console.log(`  ${label} DILEWATI — ${(error as Error).message}`);
+      console.log(`  ${label} DILEWATI - ${(error as Error).message}`);
       continue;
     }
 
-    // Petak bertetangga berbagi ruas di perbatasan — jangan tulis dua kali.
+    // Petak bertetangga berbagi ruas di perbatasan - jangan tulis dua kali.
     const laneRows = elements
       .map(toRow)
       .filter((row): row is LaneRow => row !== null && !seen.has(row.osm_id));
@@ -392,7 +392,7 @@ async function main() {
     process.exit(1);
   }
 
-  // Pembersihan hanya aman kalau seluruh area benar-benar tercakup — kalau ada
+  // Pembersihan hanya aman kalau seluruh area benar-benar tercakup - kalau ada
   // petak yang gagal, ruas di sana akan terlihat "hilang" dan salah terhapus.
   let pruned = 0;
   if (failed.length === 0) {
@@ -421,7 +421,7 @@ async function main() {
   if (failed.length > 0) {
     console.log("");
     console.log(
-      `  ${failed.length} petak gagal (${failed.join(", ")}) — pembersihan dilewati.`
+      `  ${failed.length} petak gagal (${failed.join(", ")}) - pembersihan dilewati.`
     );
     console.log("  Jalankan ulang perintah yang sama untuk melengkapi.");
   }

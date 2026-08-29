@@ -7,7 +7,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: {
-    default: "EcoCycle — Ride Green, Live Clean",
+    default: "EcoCycle - Ride Green, Live Clean",
     template: "%s · EcoCycle",
   },
   description:

@@ -179,7 +179,7 @@ export async function evaluateAchievements(
 
   for (const def of unlocked) {
     // user_achievements punya foreign key ke achievements, jadi badge yang
-    // baru ditambahkan ke katalog dipastikan ada dulu — kalau tidak,
+    // baru ditambahkan ke katalog dipastikan ada dulu - kalau tidak,
     // menyelesaikan ride akan gagal di database yang belum di-seed ulang.
     await sql`
       insert into achievements (code, name, description, icon, metric, threshold, sort_order)

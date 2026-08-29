@@ -78,7 +78,6 @@ export default async function LandingPage() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 lg:grid-cols-[1.1fr_1fr] lg:py-24">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-lime-400/25 bg-lime-400/10 px-3.5 py-1.5 text-xs font-medium text-lime-300">
-              <Leaf className="h-3.5 w-3.5" />
               Ride Green, Live Clean
             </span>
 

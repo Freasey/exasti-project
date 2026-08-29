@@ -25,7 +25,7 @@ export default function GlobalError({
           Ada yang tidak beres
         </h1>
         <p className="mt-2 text-sm text-mist-500">
-          Halaman gagal dimuat. Coba muat ulang — kalau masih bermasalah,
+          Halaman gagal dimuat. Coba muat ulang - kalau masih bermasalah,
           periksa koneksi database di environment.
         </p>
         {error.digest && (

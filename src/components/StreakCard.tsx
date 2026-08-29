@@ -13,7 +13,7 @@ function statusText(streak: StreakSummary): string {
   if (streak.current === 0) {
     return `Gowes minimal ${formatKm(STREAK_MIN_DISTANCE_M, 0)} km hari ini untuk memulai streak.`;
   }
-  if (streak.activeToday) return "Aman — hari ini sudah tercatat.";
+  if (streak.activeToday) return "Aman - hari ini sudah tercatat.";
   if (streak.restLeft > 0) {
     return "Belum gowes hari ini. Jatah libur masih tersisa, tapi sayang kalau dipakai.";
   }
@@ -95,10 +95,10 @@ function DayDot({ day }: { day: StreakDay }) {
 
   const title =
     day.state === "active"
-      ? `${dayLabel(day.date)} — ${formatKm(day.distanceM)} km`
+      ? `${dayLabel(day.date)} - ${formatKm(day.distanceM)} km`
       : day.state === "rest"
-        ? `${dayLabel(day.date)} — hari libur`
-        : `${dayLabel(day.date)} — belum ada ride`;
+        ? `${dayLabel(day.date)} - hari libur`
+        : `${dayLabel(day.date)} - belum ada ride`;
 
   return (
     <div className="flex min-w-0 flex-col items-center gap-1.5">

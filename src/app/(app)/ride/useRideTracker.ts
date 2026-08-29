@@ -14,7 +14,7 @@ import type { TrackPoint } from "@/lib/types";
 export type Phase = "idle" | "starting" | "recording" | "paused" | "saving";
 
 const STORAGE_KEY = "ecocycle:active-ride";
-/** Titik baru diabaikan kalau terlalu rapat — hemat memori & mengurangi jitter. */
+/** Titik baru diabaikan kalau terlalu rapat - hemat memori & mengurangi jitter. */
 const MIN_MOVE_M = 3;
 const MIN_GAP_MS = 1500;
 /** Sampel dengan akurasi lebih buruk dari ini dibuang. */
@@ -38,7 +38,7 @@ function saveBackup(backup: Backup) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(backup));
   } catch {
-    // storage penuh / mode privat — abaikan, ride tetap jalan di memori
+    // storage penuh / mode privat - abaikan, ride tetap jalan di memori
   }
 }
 
@@ -80,7 +80,7 @@ export function useRideTracker(initialRideId: string | null) {
 
   /* ---------------- pemulihan sesi setelah refresh ---------------- */
   // localStorage tidak ada saat render di server, jadi pemulihan sesi memang
-  // harus terjadi setelah mount — bukan state turunan yang bisa dihitung ulang.
+  // harus terjadi setelah mount - bukan state turunan yang bisa dihitung ulang.
   useEffect(() => {
     const backup = loadBackup(initialRideId);
     if (backup && backup.track.length > 0) {
@@ -212,7 +212,7 @@ export function useRideTracker(initialRideId: string | null) {
       wakeLockRef.current =
         (await navigator.wakeLock?.request("screen")) ?? null;
     } catch {
-      // tidak didukung / ditolak — bukan masalah kritis
+      // tidak didukung / ditolak - bukan masalah kritis
     }
   }, []);
 
@@ -240,7 +240,7 @@ export function useRideTracker(initialRideId: string | null) {
 
   /* ---------------- ping ke server ---------------- */
   // Interval ping dibuat sekali per sesi, tapi harus selalu mengirim angka
-  // terbaru — jadi snapshot-nya dibaca lewat ref, bukan lewat closure.
+  // terbaru - jadi snapshot-nya dibaca lewat ref, bukan lewat closure.
   const snapshotRef = useRef({ track, stats, path, elapsedMs });
   useEffect(() => {
     snapshotRef.current = { track, stats, path, elapsedMs };
@@ -267,7 +267,7 @@ export function useRideTracker(initialRideId: string | null) {
           polyline: snap.path,
         }),
       }).catch(() => {
-        /* offline sesaat — ride tetap direkam di perangkat */
+        /* offline sesaat - ride tetap direkam di perangkat */
       });
     };
 

@@ -55,7 +55,7 @@ export function GreenRouteLayer({ planner = true }: { planner?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
-  // bbox yang datanya sudah ada di memori — dipakai agar geser kecil tak refetch
+  // bbox yang datanya sudah ada di memori - dipakai agar geser kecil tak refetch
   const loadedBox = useRef<BBox | null>(null);
   // penanda urutan permintaan; balasan yang kedaluwarsa diabaikan
   const requestId = useRef(0);

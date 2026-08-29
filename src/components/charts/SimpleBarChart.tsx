@@ -13,7 +13,7 @@ import {
 
 export type BarDatum = { label: string; value: number; highlight?: boolean };
 
-/** Bar chart ringkas dengan tema EcoCycle — dipakai di halaman Analytics. */
+/** Bar chart ringkas dengan tema EcoCycle - dipakai di halaman Analytics. */
 export function SimpleBarChart({
   data,
   unit,

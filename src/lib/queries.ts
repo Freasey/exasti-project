@@ -288,7 +288,7 @@ export async function getAnalyticsRides(
   );
 }
 
-/** Polyline untuk heatmap rute — dibatasi agar payload tetap kecil. */
+/** Polyline untuk heatmap rute - dibatasi agar payload tetap kecil. */
 export async function getRoutePolylines(
   userId: string,
   since: Date,
@@ -456,13 +456,13 @@ export async function getAchievements(userId: string): Promise<Achievement[]> {
 }
 
 /* ------------------------------------------------------------------ *
- * Green Route — jalur ramah sepeda (OpenStreetMap, ODbL)
+ * Green Route - jalur ramah sepeda (OpenStreetMap, ODbL)
  * ------------------------------------------------------------------ */
 
 /**
  * Jalur sepeda yang bersinggungan dengan viewport peta.
  *
- * Dua bbox bersinggungan bila saling tumpang tindih di kedua sumbu — itulah
+ * Dua bbox bersinggungan bila saling tumpang tindih di kedua sumbu - itulah
  * bentuk perbandingan di bawah, dan alasan indeks `bike_lanes_bbox_idx`
  * mencakup keempat kolom sekaligus. Saat hasil melebihi `limit`, jalur yang
  * paling terlindung didahulukan supaya yang terpotong adalah yang paling

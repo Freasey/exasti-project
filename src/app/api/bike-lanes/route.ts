@@ -5,7 +5,7 @@ import { parseBBox } from "@/lib/bike-lanes";
 
 export const runtime = "nodejs";
 
-/** Viewport selebar ini sudah mencakup seluruh Jabodetabek — lebih dari itu
+/** Viewport selebar ini sudah mencakup seluruh Jabodetabek - lebih dari itu
  *  hampir pasti salah pakai, dan hasilnya terlalu berat untuk digambar. */
 const MAX_SPAN_DEG = 1.5;
 
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
   if (box.north - box.south > MAX_SPAN_DEG || box.east - box.west > MAX_SPAN_DEG) {
     return NextResponse.json(
-      { error: "Area terlalu luas — perbesar peta dulu.", lanes: [] },
+      { error: "Area terlalu luas - perbesar peta dulu.", lanes: [] },
       { status: 422 }
     );
   }

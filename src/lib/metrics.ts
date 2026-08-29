@@ -40,7 +40,7 @@ export function haversine(
 }
 
 /* ------------------------------------------------------------------ *
- * Statistik ride — dihitung ulang di server dari track mentah,
+ * Statistik ride - dihitung ulang di server dari track mentah,
  * jadi angka dari client tidak bisa dipakai untuk curang.
  * ------------------------------------------------------------------ */
 
@@ -153,7 +153,7 @@ export function computeRideStats(track: TrackPoint[]): RideStats {
 }
 
 /* ------------------------------------------------------------------ *
- * Kalori — pendekatan MET sederhana (asumsi berat rider 70 kg)
+ * Kalori - pendekatan MET sederhana (asumsi berat rider 70 kg)
  * ------------------------------------------------------------------ */
 
 const RIDER_WEIGHT_KG = 70;
@@ -293,7 +293,7 @@ export function simplifyTrack(
  * Profil ride untuk grafik elevasi & kecepatan
  *
  * Track penuh disimpan di Vercel Blob, tapi halaman detail butuh data
- * ringan yang selalu tersedia — jadi track diringkas jadi ~120 sampel
+ * ringan yang selalu tersedia - jadi track diringkas jadi ~120 sampel
  * dan ikut disimpan di Postgres.
  * ------------------------------------------------------------------ */
 
@@ -331,7 +331,7 @@ export function buildProfile(track: TrackPoint[], samples = 120): ProfilePoint[]
   return out;
 }
 
-/** Waktu tempuh tiap kilometer — tabel "splits" ala aplikasi lari/sepeda. */
+/** Waktu tempuh tiap kilometer - tabel "splits" ala aplikasi lari/sepeda. */
 export type Split = { km: number; seconds: number; speed: number };
 
 export function buildSplits(track: TrackPoint[]): Split[] {

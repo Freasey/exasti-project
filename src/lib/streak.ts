@@ -7,7 +7,7 @@ import { APP_TIMEZONE } from "./constants";
  * Sebuah hari dihitung "aktif" kalau total jarak ride yang selesai pada
  * hari itu (menurut zona waktu aplikasi) minimal 1 km. Streak boleh
  * diselingi satu hari libur, tapi jatah itu hanya berlaku sekali per
- * tujuh hari — kalau tidak, gowes selang-seling akan membuat streak
+ * tujuh hari - kalau tidak, gowes selang-seling akan membuat streak
  * berjalan selamanya.
  * ------------------------------------------------------------------ */
 
@@ -51,7 +51,7 @@ export type StreakSummary = {
 };
 
 /* ------------------------------------------------------------------ *
- * Helper tanggal — semua tanggal berupa string "YYYY-MM-DD" dan
+ * Helper tanggal - semua tanggal berupa string "YYYY-MM-DD" dan
  * dihitung lewat UTC supaya tidak terpengaruh zona waktu server.
  * ------------------------------------------------------------------ */
 
@@ -137,7 +137,7 @@ export function computeStreak(
   const activeToday = isActive(today);
 
   // Telusuri mundur dari hari ini. Kalau hari ini belum gowes, mulai dari
-  // kemarin tanpa memotong jatah libur — harinya kan belum berakhir.
+  // kemarin tanpa memotong jatah libur - harinya kan belum berakhir.
   const restUsed: string[] = [];
   let current = 0;
   let streakStart: string | null = null;

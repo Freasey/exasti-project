@@ -22,7 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/leaderboard", label: "Leaderboard", short: "Peringkat", icon: "trophy" },
 ];
 
-/** Item bottom nav mobile — dipilih lewat flag, bukan potongan indeks. */
+/** Item bottom nav mobile - dipilih lewat flag, bukan potongan indeks. */
 export const MOBILE_NAV_ITEMS = NAV_ITEMS.filter((item) => item.mobile);
 
 /** Sisanya tidak muat di bottom nav, jadi disediakan sebagai ikon di Topbar. */

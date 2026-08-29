@@ -3,7 +3,7 @@ import { Leaf } from "lucide-react";
 import { formatNumber } from "@/lib/format";
 import type { Reward } from "@/lib/types";
 
-/** Kartu brand — warna aksen diambil dari kolom `accent` di tabel rewards. */
+/** Kartu brand - warna aksen diambil dari kolom `accent` di tabel rewards. */
 export function RewardTile({
   reward,
   action,

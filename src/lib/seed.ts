@@ -12,7 +12,7 @@ import { DEMO_EMAIL, DEMO_PASSWORD } from "./constants";
 import type { User } from "./types";
 
 /* ------------------------------------------------------------------ *
- * Katalog reward — mengikuti brand partner pada desain awal
+ * Katalog reward - mengikuti brand partner pada desain awal
  * ------------------------------------------------------------------ */
 
 export const REWARD_CATALOG = [
