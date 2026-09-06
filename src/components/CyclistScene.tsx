@@ -2,11 +2,18 @@
  * Ilustrasi pesepeda + siluet kota. Dipakai di banner dashboard dan
  * panel brand halaman login. Murni SVG supaya ringan dan ikut tema.
  */
-export function CyclistScene({ className = "" }: { className?: string }) {
+export function CyclistScene({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <svg
       viewBox="0 0 520 300"
       className={className}
+      style={style}
       fill="none"
       aria-hidden="true"
       preserveAspectRatio="xMidYMid slice"

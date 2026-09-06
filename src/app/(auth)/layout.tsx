@@ -36,7 +36,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
           <Logo />
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col justify-center px-12">
+        <div className="relative z-10 flex flex-1 flex-col justify-center px-12 pb-48">
           <h1 className="max-w-md text-4xl font-semibold leading-tight tracking-tight">
             Setiap kayuhan menghemat{" "}
             <span className="text-lime-400">karbon kota</span>.
@@ -61,7 +61,14 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
           </ul>
         </div>
 
-        <CyclistScene className="pointer-events-none absolute inset-x-0 bottom-0 h-56 w-full opacity-90" />
+        <CyclistScene
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full opacity-90"
+          style={{
+            maskImage: "linear-gradient(to top, black 70%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, black 70%, transparent 100%)",
+          }}
+        />
       </section>
 
       {/* Form */}
