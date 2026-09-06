@@ -7,6 +7,7 @@ import {
   Info,
   Leaf,
   Lock,
+  LogOut,
   Map as MapIcon,
   Medal,
   Mountain,
@@ -20,6 +21,7 @@ import {
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Progress } from "@/components/ui/Progress";
 import { ProfileForm } from "./ProfileForm";
+import { logoutAction } from "@/app/actions/auth";
 import { requireUser } from "@/lib/auth";
 import { getAchievements, getUserRank, getUserTotals } from "@/lib/queries";
 import { levelFromXp } from "@/lib/metrics";
@@ -175,6 +177,25 @@ export default async function SettingsPage() {
             );
           })}
         </div>
+      </Card>
+
+      {/* ---------------- Keluar ---------------- */}
+      <Card className="p-5">
+        <form action={logoutAction} className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-mist-100">Keluar akun</p>
+            <p className="mt-0.5 text-xs text-mist-500">
+              Kamu perlu masuk lagi untuk mengakses EcoCycle.
+            </p>
+          </div>
+          <button
+            type="submit"
+            className="flex shrink-0 items-center gap-2 rounded-xl border border-flame-500/25 bg-flame-500/10 px-4 py-2 text-sm font-medium text-flame-400 transition-colors hover:bg-flame-500/15"
+          >
+            <LogOut className="h-4 w-4" strokeWidth={1.9} />
+            Keluar
+          </button>
+        </form>
       </Card>
     </div>
   );

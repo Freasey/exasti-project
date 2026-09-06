@@ -1,20 +1,16 @@
-import { Bell, LogOut, Settings } from "lucide-react";
+import { Bell, Settings } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "@/components/ui/Avatar";
-import { logoutAction } from "@/app/actions/auth";
+import { shortDisplayName } from "@/lib/format";
 
 export function Topbar({
   name,
   avatarUrl,
-  level,
-  title,
   hasNotification = true,
 }: {
   name: string;
   avatarUrl: string | null;
-  level: number;
-  title: string;
   hasNotification?: boolean;
 }) {
   return (
@@ -41,29 +37,14 @@ export function Topbar({
           <Settings className="h-5 w-5" strokeWidth={1.9} />
         </Link>
 
-        <form action={logoutAction} className="hidden sm:block">
-          <button
-            type="submit"
-            aria-label="Keluar"
-            className="rounded-xl p-2.5 text-mist-300 transition-colors hover:bg-ink-800 hover:text-flame-400"
-          >
-            <LogOut className="h-5 w-5" strokeWidth={1.9} />
-          </button>
-        </form>
-
         <Link
           href="/settings"
           aria-label="Profil"
-          className="ml-1 flex items-center gap-2.5 rounded-xl py-1 pl-1 pr-1 transition-colors hover:bg-ink-800 lg:pr-3"
+          className="ml-1 flex items-center gap-2 rounded-xl py-1 pl-1 pr-2 transition-colors hover:bg-ink-800 sm:gap-2.5 sm:pr-3"
         >
           <Avatar name={name} src={avatarUrl} size={34} />
-          <span className="hidden text-left leading-tight lg:block">
-            <span className="block text-xs font-medium text-mist-100">
-              {name}
-            </span>
-            <span className="block text-[11px] text-mist-500">
-              Level {level} &middot; {title}
-            </span>
+          <span className="max-w-[80px] truncate text-xs font-medium text-mist-100 sm:text-sm">
+            {shortDisplayName(name)}
           </span>
         </Link>
       </div>

@@ -9,7 +9,7 @@ export function CyclistScene({ className = "" }: { className?: string }) {
       className={className}
       fill="none"
       aria-hidden="true"
-      preserveAspectRatio="xMidYMax slice"
+      preserveAspectRatio="xMidYMid slice"
     >
       <defs>
         <linearGradient id="eco-sky" x1="0" y1="0" x2="0" y2="1">

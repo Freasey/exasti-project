@@ -86,3 +86,9 @@ export function initials(name: string): string {
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
 }
+
+/** "Rider Green" -> "Rider", "Ekacahyaningtyas" -> "Ekacahyani…" */
+export function shortDisplayName(name: string, max = 10): string {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  return first.length > max ? `${first.slice(0, max - 1)}…` : first;
+}
